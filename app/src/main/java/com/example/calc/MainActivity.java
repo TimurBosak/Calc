@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonMinus;
     Button buttonEqual;
     TextView result;
+    String testString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,67 +54,66 @@ public class MainActivity extends AppCompatActivity {
         buttonMinus = (Button) findViewById(R.id.buttonMinus);
         buttonEqual = (Button) findViewById(R.id.buttonEqual);
 
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String testString = "";
+
                 switch(v.getId()){
                     case R.id.button0:
                         testString += "0";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button1:
                         testString += "1";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button2:
                         testString += "2";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button3:
                         testString += "3";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button4:
                         testString += "4";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button5:
                         testString += "5";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button6:
                         testString += "6";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button7:
                         testString += "7";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button8:
                         testString += "8";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.button9:
                         testString += "9";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.buttonSum:
                         testString += "+";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.buttonMinus:
                         testString += "-";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.buttonDivide:
                         testString += "/";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.buttonMulti:
                         testString += "*";
-                        result.append(testString);
+                        result.setText(testString);
                         break;
                     case R.id.buttonClear:
                         testString = "";
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonEqual:
-                        double resultNumber = getResult(v,testString);
+                        double resultNumber = getResult(testString);
                         String answer = Double.toString(resultNumber);
                         result.setText(answer);
                         break;
@@ -151,32 +151,30 @@ public class MainActivity extends AppCompatActivity {
         buttonEqual.setOnClickListener(onClickListener);
     }
 
-    public double getResult (View view, String testString) {
-        if (view.getId() == R.id.buttonEqual) {
-            int i = 0;
+    public double getResult (String testString) {
             double result = 0;
             double firstOperand;
             double secondOperand;
             String numberOne = "";
             String numberTwo = "";
-            String plus = "+";
-            String minus = "-";
-            String multi = "*";
-            String divide = "/";
+            Character plus = '+';
+            Character minus = '-';
+            Character multi = '*';
+            Character divide = '/';
             Character finalOperation = null;
-            while (i <= testString.length()) {
-                if (testString.contains(plus) || testString.contains(minus) || testString.contains(multi) || testString.contains(divide)) {
+            for (int i = 0; i<testString.length(); i++) {
+                if (testString.toCharArray()[i]==plus || testString.toCharArray()[i]==minus ||
+                        testString.toCharArray()[i]==divide || testString.toCharArray()[i]==multi) {
                     finalOperation = testString.toCharArray()[i];
                     i++;
-                } else {
-                    numberOne += testString.toCharArray()[i];
-                    i++;
                 }
-                if (finalOperation != null) {
-                    numberTwo += testString.toCharArray()[i];
-                }
-                firstOperand = Double.valueOf(numberOne);
-                secondOperand = Double.valueOf(numberTwo);
+                if (finalOperation==null)
+                numberOne+=testString.toCharArray()[i];
+                else
+                    numberTwo+=testString.toCharArray()[i];
+            }
+            firstOperand = Double.valueOf(numberOne);
+            secondOperand = Double.valueOf(numberTwo);
                 switch (finalOperation) {
                     case '+':
                         result = firstOperand + secondOperand;
@@ -191,9 +189,6 @@ public class MainActivity extends AppCompatActivity {
                         result = firstOperand / secondOperand;
                         return result;
                 }
-
-            }
-        }
         return 0;
     }
 }
