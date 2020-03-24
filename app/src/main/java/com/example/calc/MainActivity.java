@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     Button button1;
@@ -124,9 +126,13 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonEqual:
-                        double resultNumber = getResult(testString);
-                        String answer = Double.toString(resultNumber);
-                        result.setText(answer);
+                        PolishParse n = new PolishParse();
+                        List<String> exp = n.parse(testString);
+                        boolean flag = n.flag;
+                        if (flag){
+                            double answer = Calculator.calc(exp);
+                         result.setText(Double.toString(answer));
+                        }
                         break;
                 }
             }
@@ -151,44 +157,5 @@ public class MainActivity extends AppCompatActivity {
         buttonEqual.setOnClickListener(onClickListener);
     }
 
-    public double getResult (String testString) {
-            double result = 0;
-            double firstOperand;
-            double secondOperand;
-            String numberOne = "";
-            String numberTwo = "";
-            Character plus = '+';
-            Character minus = '-';
-            Character multi = '*';
-            Character divide = '/';
-            Character finalOperation = null;
-            for (int i = 0; i<testString.length(); i++) {
-                if (testString.toCharArray()[i]==plus || testString.toCharArray()[i]==minus ||
-                        testString.toCharArray()[i]==divide || testString.toCharArray()[i]==multi) {
-                    finalOperation = testString.toCharArray()[i];
-                    i++;
-                }
-                if (finalOperation==null)
-                numberOne+=testString.toCharArray()[i];
-                else
-                    numberTwo+=testString.toCharArray()[i];
-            }
-            firstOperand = Double.valueOf(numberOne);
-            secondOperand = Double.valueOf(numberTwo);
-                switch (finalOperation) {
-                    case '+':
-                        result = firstOperand + secondOperand;
-                        return result;
-                    case '-':
-                        result = firstOperand - secondOperand;
-                        return result;
-                    case '*':
-                        result = firstOperand * secondOperand;
-                        return result;
-                    case '/':
-                        result = firstOperand / secondOperand;
-                        return result;
-                }
-        return 0;
-    }
+
 }
