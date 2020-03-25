@@ -37,24 +37,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        result = (TextView) findViewById(R.id.result);
-        button0 = (Button) findViewById(R.id.button0);
-        button1 = (Button) findViewById(R.id.button1);
-        button2 = (Button) findViewById(R.id.button2);
-        button3 = (Button) findViewById(R.id.button3);
-        button4 = (Button) findViewById(R.id.button4);
-        button5 = (Button) findViewById(R.id.button5);
-        button6 = (Button) findViewById(R.id.button6);
-        button7 = (Button) findViewById(R.id.button7);
-        button8 = (Button) findViewById(R.id.button8);
-        button9 = (Button) findViewById(R.id.button9);
-        buttonClear = (Button) findViewById(R.id.buttonClear);
-        buttonDivide = (Button) findViewById(R.id.buttonDivide);
-        buttonMulti = (Button) findViewById(R.id.buttonMulti);
-        buttonClearOne = (Button) findViewById(R.id.buttonClearOne);
-        buttonSum = (Button) findViewById(R.id.buttonSum);
-        buttonMinus = (Button) findViewById(R.id.buttonMinus);
-        buttonEqual = (Button) findViewById(R.id.buttonEqual);
+        result = findViewById(R.id.result);
+        button0 =  findViewById(R.id.button0);
+        button1 =  findViewById(R.id.button1);
+        button2 =  findViewById(R.id.button2);
+        button3 =  findViewById(R.id.button3);
+        button4 =  findViewById(R.id.button4);
+        button5 =  findViewById(R.id.button5);
+        button6 =  findViewById(R.id.button6);
+        button7 =  findViewById(R.id.button7);
+        button8 =  findViewById(R.id.button8);
+        button9 =  findViewById(R.id.button9);
+        buttonClear =  findViewById(R.id.buttonClear);
+        buttonDivide =  findViewById(R.id.buttonDivide);
+        buttonMulti =  findViewById(R.id.buttonMulti);
+        buttonClearOne =  findViewById(R.id.buttonClearOne);
+        buttonSum =  findViewById(R.id.buttonSum);
+        buttonMinus =  findViewById(R.id.buttonMinus);
+        buttonEqual =  findViewById(R.id.buttonEqual);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -122,16 +122,20 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonClearOne:
-                        testString = testString.substring(0,testString.length()-1);
-                        result.setText(testString);
-                        break;
+                        if (testString.length()==0)
+                            break;
+                        else {
+                            testString = testString.substring(0, testString.length() - 1);
+                            result.setText(testString);
+                            break;
+                        }
                     case R.id.buttonEqual:
                         PolishParse n = new PolishParse();
                         List<String> exp = n.parse(testString);
                         boolean flag = n.flag;
                         if (flag){
                             double answer = Calculator.calc(exp);
-                         result.setText(Double.toString(answer));
+                            result.setText(Double.toString(answer));
                         }
                         break;
                 }
