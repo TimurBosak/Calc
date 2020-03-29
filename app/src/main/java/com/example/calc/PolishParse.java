@@ -1,103 +1,80 @@
 package com.example.calc;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Stack;
 
-class PolishParse {
-    private static String operators = "+-*/";
-    private static String delimiters = "() " + operators;
-    public static boolean flag = true;
-    private static boolean isDelimiter(String token) {
-        if (token.length() != 1) return false;
-        for (int i = 0; i < delimiters.length(); i++) {
-            if (token.charAt(0) == delimiters.charAt(i)) return true;
+public class PolishParse {
+    public static boolean isFunction(char token) {
+        if (token == 's' || token == 'c' || token == 't')
+            return true;
+        return false;
+    }
+
+    public static boolean isSqrt(char token){
+        if (token =='√') return true;
+        return false;
+    }
+
+    public static boolean isOperation(char token) {
+        if (token == '+' || token == '*' || token == '/' || token == '-' || token=='^' || token=='%')
+            return true;
+        return false;
+    }
+
+    public static boolean isNumberOrSmth(char token) {
+        if (token == '.' || token == '1' || token == '2'
+                || token == '3' || token == '4' || token == '5' || token == '6'
+                || token == '7' || token == '8' || token == '9' || token == '0')
+            return true;
+        return false;
+    }
+
+    public static int getPriority(char token) {
+        switch (token) {
+            case '(':
+            case ')':
+                return 1;
+            case '+':
+            case '-':
+                return 2;
+            case '*':
+            case '/':
+            case '%':
+                return 3;
+            default:
+                return 4;
         }
-        return false;
     }
 
-    private static boolean isOperator(String token) {
-        if (token.equals("u-")) return true;
-        for (int i = 0; i < operators.length(); i++) {
-            if (token.charAt(0) == operators.charAt(i)) return true;
-        }
-        return false;
-    }
-
-    private static boolean isFunction(String token) {
-        if (token.equals("sqrt") || token.equals("cube") || token.equals("pow10")) return true;
-        return false;
-    }
-
-    private static int priority(String token) {
-        if (token.equals("(")) return 1;
-        if (token.equals("+") || token.equals("-")) return 2;
-        if (token.equals("*") || token.equals("/")) return 3;
-        return 4;
-    }
-
-    public static List<String> parse(String infix) {
-        List<String> postfix = new ArrayList<String>();
-        Deque<String> stack = new ArrayDeque<String>();
-        StringTokenizer tokenizer = new StringTokenizer(infix, delimiters, true);
-        String prev = "";
-        String curr = "";
-        while (tokenizer.hasMoreTokens()) {
-            curr = tokenizer.nextToken();
-            if (!tokenizer.hasMoreTokens() && isOperator(curr)) {
-                System.out.println("Некорректное выражение.");
-                flag = false;
-                return postfix;
+    public static String getPostfix(String infix) {
+        Stack<String> stack = new Stack<>();
+        String result = new String();
+        for (int i = 0; i < infix.length(); i++) {
+            if (isNumberOrSmth(infix.charAt(i)) || infix.charAt(i)=='!' || infix.charAt(i)=='π') result = result.concat(infix.substring(i, i + 1));
+            else result = result.concat(" ");
+            if (isFunction(infix.charAt(i))) {
+                stack.push(infix.substring(i, i + 3));
+                i+=2;
             }
-            if (curr.equals(" ")) continue;
-            if (isFunction(curr)) stack.push(curr);
-            else if (isDelimiter(curr)) {
-                if (curr.equals("(")) stack.push(curr);
-                else if (curr.equals(")")) {
-                    while (!stack.peek().equals("(")) {
-                        postfix.add(stack.pop());
-                        if (stack.isEmpty()) {
-                            System.out.println("Скобки не согласованы.");
-                            flag = false;
-                            return postfix;
-                        }
-                    }
-                    stack.pop();
-                    if (!stack.isEmpty() && isFunction(stack.peek())) {
-                        postfix.add(stack.pop());
-                    }
+            if (isSqrt(infix.charAt(i))) stack.push(infix.substring(i,i+1));
+            if (infix.charAt(i) == '(') stack.push(infix.substring(i, i + 1));
+            if (infix.charAt(i) == ')') {
+                while (stack.peek() != "("){
+                    if (stack.peek().equals("(")) break;
+                    result += stack.pop();
                 }
-                else {
-                    if (curr.equals("-") && (prev.equals("") || (isDelimiter(prev)  && !prev.equals(")")))) {
-                        curr = "u-";
-                    }
-                    else {
-                        while (!stack.isEmpty() && (priority(curr) <= priority(stack.peek()))) {
-                            postfix.add(stack.pop());
-                        }
-
-                    }
-                    stack.push(curr);
+                stack.pop();
+            }
+            if (isOperation(infix.charAt(i)) && !stack.isEmpty()) {
+                if (getPriority(infix.charAt(i)) <= getPriority(stack.peek().charAt(0)) || stack.peek().length() == 3) {
+                    result += stack.pop();
                 }
-
+                stack.push(infix.substring(i, i + 1));
             }
-
-            else {
-                postfix.add(curr);
-            }
-            prev = curr;
+            else if (stack.isEmpty() && isOperation(infix.charAt(i))) stack.push(infix.substring(i,i+1));
         }
-
         while (!stack.isEmpty()) {
-            if (isOperator(stack.peek())) postfix.add(stack.pop());
-            else {
-                System.out.println("Скобки не согласованы.");
-                flag = false;
-                return postfix;
-            }
+            result += stack.pop();
         }
-        return postfix;
+        return result;
     }
 }
