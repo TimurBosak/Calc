@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button33:
+                        if (doubleOperationError(testString))
+                            break;
                         testString += "%";
                         result.setText(testString);
                         break;
@@ -140,18 +142,26 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonSum:
+                        if (doubleOperationError(testString))
+                            break;
                         testString += "+";
                         result.setText(testString);
                         break;
                     case R.id.buttonMinus:
+                        if (doubleOperationError(testString))
+                            break;
                         testString += "-";
                         result.setText(testString);
                         break;
                     case R.id.buttonDivide:
+                        if (doubleOperationError(testString))
+                            break;
                         testString += "/";
                         result.setText(testString);
                         break;
                     case R.id.buttonMulti:
+                        if (doubleOperationError(testString))
+                            break;
                         testString += "*";
                         result.setText(testString);
                         break;
@@ -168,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         }
                     case R.id.buttonEqual:
+                        if (notEndedInfix(testString))
+                            break;
                         String postfix = PolishParse.getPostfix(testString);
                         double answer = Calculator.calculate(postfix);
                             result.setText(Double.toString(answer));
@@ -276,5 +288,39 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         testString = savedInstanceState.getString("textView");
         result.setText(testString);
+    }
+
+    public boolean doubleOperationError(String input){
+        switch (input.charAt(input.length()-1)){
+            case '*':
+            case '/':
+            case '%':
+            case '-':
+            case '+':
+                return true;
+        }
+        return false;
+    }
+
+    public boolean notEndedInfix (String input){
+        int openBracket = 0;
+        int closeBracket = 0;
+        switch (input.charAt(input.length()-1)){
+            case '*':
+            case '/':
+            case '%':
+            case '-':
+            case '+':
+                return true;
+        }
+        for (int i=0; i<input.length(); i++){
+            if (input.charAt(i)=='(')
+                openBracket++;
+            if (input.charAt(i)==')')
+                closeBracket++;
+        }
+        if (openBracket!=closeBracket)
+            return true;
+        return false;
     }
 }
