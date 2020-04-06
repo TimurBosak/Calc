@@ -3,10 +3,12 @@ package com.example.calc;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
+    Toast toast;
     Button buttonOpen;
     Button buttonClose;
     Button buttonPow0;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_main);
+        button33 = findViewById(R.id.button33);
         button32 = findViewById(R.id.button32);
         result = findViewById(R.id.result);
         button0 = findViewById(R.id.button0);
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         buttonMinus = findViewById(R.id.buttonMinus);
         buttonEqual = findViewById(R.id.buttonEqual);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            button33 = findViewById(R.id.button33);
             buttonOpen = findViewById(R.id.buttonOpen);
             buttonClose = findViewById(R.id.buttonClose);
             buttonPow0 = findViewById(R.id.buttonPow0);
@@ -96,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.button33:
                         if (doubleOperationError(testString))
+                            break;
+                        if (operationFirst(testString))
                             break;
                         testString += "%";
                         result.setText(testString);
@@ -147,11 +152,15 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.buttonSum:
                         if (doubleOperationError(testString))
                             break;
+                        if (operationFirst(testString))
+                            break;
                         testString += "+";
                         result.setText(testString);
                         break;
                     case R.id.buttonMinus:
                         if (doubleOperationError(testString))
+                            break;
+                        if (operationFirst(testString))
                             break;
                         testString += "-";
                         result.setText(testString);
@@ -159,11 +168,15 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.buttonDivide:
                         if (doubleOperationError(testString))
                             break;
+                        if (operationFirst(testString))
+                            break;
                         testString += "/";
                         result.setText(testString);
                         break;
                     case R.id.buttonMulti:
                         if (doubleOperationError(testString))
+                            break;
+                        if (operationFirst(testString))
                             break;
                         testString += "*";
                         result.setText(testString);
@@ -185,7 +198,14 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         String postfix = PolishParse.getPostfix(testString);
                         double answer = Calculator.calculate(postfix);
+                        if (intTest(answer)) {
+                            result.setText(Long.toString(Math.round(answer)));
+                            testString = Long.toString(Math.round(answer));
+                        }
+                        else {
                             result.setText(Double.toString(answer));
+                            testString = Double.toString(answer);
+                        }
                         break;
 
                     case R.id.buttonOpen:
@@ -218,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonFact:
+                        if (doubleFact(testString))
+                            break;
                         testString += "!";
                         result.setText(testString);
                         break;
@@ -245,7 +267,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
+        buttonClearOne.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                testString = "";
+                result.setText(testString);
+                return true;
+            }
+        });
         button32.setOnClickListener(onClickListener);
         button0.setOnClickListener(onClickListener);
         button1.setOnClickListener(onClickListener);
@@ -264,8 +293,8 @@ public class MainActivity extends AppCompatActivity {
         buttonClear.setOnClickListener(onClickListener);
         buttonClearOne.setOnClickListener(onClickListener);
         buttonEqual.setOnClickListener(onClickListener);
+        button33.setOnClickListener(onClickListener);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            button33.setOnClickListener(onClickListener);
             buttonOpen.setOnClickListener(onClickListener);
             buttonClose.setOnClickListener(onClickListener);
             buttonPow0.setOnClickListener(onClickListener);
@@ -294,18 +323,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean doubleOperationError(String input){
-        switch (input.charAt(input.length()-1)){
-            case '*':
-            case '/':
-            case '%':
-            case '-':
-            case '+':
-                return true;
+        if (input.length()!=0) {
+            switch (input.charAt(input.length() - 1)) {
+                case '*':
+                case '/':
+                case '%':
+                case '!':
+                case '-':
+                case '+':
+                    toast = Toast.makeText(getApplicationContext(),"Две операции подряд невозможны",Toast.LENGTH_SHORT);
+                    return true;
+            }
         }
         return false;
     }
 
     public boolean notEndedInfix (String input){
+        if (input.isEmpty()){
+            toast = Toast.makeText(getApplicationContext(), "Введите что-нибудь", Toast.LENGTH_SHORT); toast.show();
+            return true;
+        }
         int openBracket = 0;
         int closeBracket = 0;
         switch (input.charAt(input.length()-1)){
@@ -314,6 +351,8 @@ public class MainActivity extends AppCompatActivity {
             case '%':
             case '-':
             case '+':
+                toast = Toast.makeText(getApplicationContext(),"Выражение не может оканчиваться операцией", Toast.LENGTH_SHORT);
+                toast.show();
                 return true;
         }
         for (int i=0; i<input.length(); i++){
@@ -322,8 +361,48 @@ public class MainActivity extends AppCompatActivity {
             if (input.charAt(i)==')')
                 closeBracket++;
         }
-        if (openBracket!=closeBracket)
+        if (openBracket!=closeBracket){
+            toast = Toast.makeText(getApplicationContext(),"Скобки не согласованы", Toast.LENGTH_SHORT);
+            toast.show();
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean operationFirst (String infix){
+        if (infix.length()==0){
+            toast = Toast.makeText(getApplicationContext(),"Выражение не должно начинатья с операции", Toast.LENGTH_SHORT);
+            toast.show();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean intTest (Double answer){
+        if (Math.round(answer) == answer)
             return true;
         return false;
     }
+
+    public boolean doubleFact (String input){
+        if (input.length()!=0) {
+            if (input.charAt(input.length() - 1) == '!') return true;
+            switch (input.charAt(input.length()-1)){
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                    return false;
+            }
+        }
+        return true;
+    }
+
 }

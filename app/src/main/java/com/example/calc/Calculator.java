@@ -70,6 +70,9 @@ public class Calculator {
                     case 'π':
                         stack.push(3.14);
                         break;
+                    case 'u':
+                        stack.push(-stack.pop());
+                        break;
                 }
             }
         }

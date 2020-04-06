@@ -48,6 +48,7 @@ public class PolishParse {
     public static String getPostfix(String infix) {
         Stack<String> stack = new Stack<>();
         String result = new String();
+        char firstCheck='0';
         for (int i = 0; i < infix.length(); i++) {
             if (isNumberOrSmth(infix.charAt(i)) || infix.charAt(i)=='!' || infix.charAt(i)=='π') result = result.concat(infix.substring(i, i + 1));
             else result = result.concat(" ");
@@ -64,13 +65,19 @@ public class PolishParse {
                 }
                 stack.pop();
             }
-            if (isOperation(infix.charAt(i)) && !stack.isEmpty()) {
+            if (infix.charAt(i)=='-' && (firstCheck=='0' || infix.charAt(i-1)=='(')){
+                stack.push("u");
+            }
+            else if (isOperation(infix.charAt(i)) && !stack.isEmpty()) {
                 if (getPriority(infix.charAt(i)) <= getPriority(stack.peek().charAt(0)) || stack.peek().length() == 3) {
                     result += stack.pop();
                 }
                 stack.push(infix.substring(i, i + 1));
             }
-            else if (stack.isEmpty() && isOperation(infix.charAt(i))) stack.push(infix.substring(i,i+1));
+            else if (stack.isEmpty() && isOperation(infix.charAt(i))){
+                stack.push(infix.substring(i,i+1));
+            }
+            firstCheck='1';
         }
         while (!stack.isEmpty()) {
             result += stack.pop();
