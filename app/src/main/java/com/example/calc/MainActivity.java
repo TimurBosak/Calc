@@ -106,6 +106,15 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.button32:
+                        if (doughtFirst(testString))
+                            break;
+                        if (zeroDought(testString)){
+                            testString +="0.";
+                            result.setText(testString);
+                            break;
+                        }
+                        if (doubleDought(testString))
+                            break;;
                         testString += ".";
                         result.setText(testString);
                         break;
@@ -160,6 +169,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.buttonMinus:
                         if (doubleOperationError(testString))
                             break;
+                        if (minusFirst(testString)){
+                            testString += "-";
+                            result.setText(testString);
+                            break;
+                        }
                         if (operationFirst(testString))
                             break;
                         testString += "-";
@@ -221,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
                         result.setText(testString);
                         break;
                     case R.id.buttonPow0:
+                        if (notEndedInfix(testString))
+                            break;
                         String powPostfix = PolishParse.getPostfix(testString);
                         double powAnswer = 1/Calculator.calculate(powPostfix);
                         result.setText(Double.toString(powAnswer));
@@ -369,7 +385,34 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
+    public boolean doughtFirst (String infix) {
+        if (infix.length() != 0) {
+            if (infix.charAt(infix.length() - 1) == '.') return true;
+        }
+        return false;
+    }
 
+    public boolean zeroDought (String infix){
+        if (infix.isEmpty()) return true;
+        return false;
+    }
+
+    public boolean doubleDought (String infix){
+        int z=0;
+        for (int i=infix.length()-1; i>=0; i--){
+            if (infix.charAt(i)=='.') z++;
+            if (z==1) return true;
+            if (infix.charAt(i)=='-' || infix.charAt(i)=='+' ||
+            infix.charAt(i)=='*' || infix.charAt(i)=='/')
+                return false;
+        }
+        return false;
+    }
+
+    public boolean minusFirst(String infix){
+        if (infix.isEmpty()) return true;
+        return false;
+    }
     public boolean operationFirst (String infix){
         if (infix.length()==0){
             toast = Toast.makeText(getApplicationContext(),"Выражение не должно начинатья с операции", Toast.LENGTH_SHORT);
