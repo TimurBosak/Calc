@@ -23,14 +23,13 @@ Infrastructure is managed by AWS CDK using the separate [repo](https://github.co
 - [Prod](https://grafana.dev.habi.ae/explore?schemaVersion=1&panes=%7B%22pap%22:%7B%22datasource%22:%22fdnnc4zx6mrr4e%22,%22queries%22:%5B%7B%22id%22:%22%22,%22region%22:%22default%22,%22logGroups%22:%5B%7B%22arn%22:%22arn:aws:logs:me-central-1:704908703383:log-group:barrio-outbox:%2A%22,%22name%22:%22barrio-outbox%22,%22accountId%22:%22704908703383%22%7D%5D,%22queryMode%22:%22Logs%22,%22namespace%22:%22%22,%22metricName%22:%22%22,%22expression%22:%22fields%20@timestamp,%20@message%20%22,%22dimensions%22:%7B%7D,%22statistic%22:%22Average%22,%22period%22:%22%22,%22metricQueryType%22:0,%22metricEditorMode%22:0,%22sqlExpression%22:%22%22,%22matchExact%22:true,%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22cloudwatch%22,%22uid%22:%22fdnnc4zx6mrr4e%22%7D,%22label%22:%22%22,%22statsGroups%22:%5B%5D%7D%5D,%22range%22:%7B%22from%22:%22now-15m%22,%22to%22:%22now%22%7D%7D%7D&orgId=1)
 
 ### Backend release flow
-- ### Major version
+### Major version
   1. Once all changes for the release are ready on **dev** branch, create a **release branch** from **dev** branch.
   2. The naming rule for the release branch is **release/1.x+1**, where **x** is the current major version number. For example, if the current release version is **1.15.4**, branch name should be **release/1.16**.
   3. Once the release branch is created, push it to the remote repository to initiate the release pipeline - **Build Server Release**.
   4. Once the build is finished, the last step is to start the **Delpoy server stack (prod)** workflow, providing all tags version from second step (in this case **1.16**) and clicking **Run workflow**.
-  ![{474A1C29-AB6B-4458-AD6F-697AF6B1C899}](https://github.com/user-attachments/assets/e6607dd4-1f7d-407e-bca5-332895979ce3)
   5. Once the build is finished, you can check that new version of production stack is applied by visiting **CloudFormation->Stack->{name of stack}->Parameters** and verifying that value for tags updated (**1.16** in this case).
-- ### Minor version (generally used for hotfix delivery on production)
+### Minor version (generally used for hotfix delivery on production)
   1. The needed change is created on *feature branch*, based on the current major release branch (**release/1.x**).
   2. A **pull request** is created with the target branch as **release/1.x**. Once approved, the PR merged to **release/1.x**. This merge will trigger the **Build Server Release** workflow.
   3. The build will create a new release version tag with a patch increment (f.e. if the current version is **1.15**, it will become **1.15.1**)
