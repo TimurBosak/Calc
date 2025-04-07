@@ -1,7 +1,7 @@
 ## Backend Release Flow
 ## Versioning
-  For releases we use SemVer approach. (**MAJOR.MINOR.PATCH**). For example, **1.15.4**.
-  For dev versions we use sequential numbering approach, handled by **Build and Deploy Server (dev)** workflow.
+- For releases we use SemVer approach. (**MAJOR.MINOR.PATCH**). For example, **1.15.4**.
+- For dev versions we use sequential numbering approach, handled by **Build and Deploy Server (dev)** workflow.
 ## Deployment Process
   1. Push Release Branch: After creating the release branch (for regular releases) or merging the feature branch (for patch releases), push the branch to the remote repository to initiate the release pipeline — **Build Server Release**.
   2. **Start Deployment Workflow**: Once the build is finished, start the **Deploy Server Stack (prod)** workflow, providing the version tag from the previous steps and clicking Run Workflow.
