@@ -4,7 +4,8 @@
 - For dev versions we use sequential numbering approach, handled by **Build and Deploy Server (dev)** workflow. For example, **DEV.255**
 ## Deployment Process
   1. **Push Release Branch**:
-  - **Regular Release**: After gathering all needed changes on _dev_ branch create the release branch (e.g., _release/1.16_ from _dev_), push the branch to the remote repository. This will trigger the **Build Server Release** workflow.
+  - **Regular Release**:
+    - After gathering all needed changes on _dev_ branch create the release branch (e.g., _release/1.16_ from _dev_), push the branch to the remote repository. This will trigger the **Build Server Release** workflow.
   - **Patch Release**:
     - Create the patch feature branch with any name branched from current minor release version (e.g., _release/1.16_)
     - Create fix on this feature branch.
