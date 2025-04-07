@@ -3,7 +3,7 @@
 - For releases we use **SemVer** approach: **MAJOR.MINOR.PATCH** (e.g., _1.15.4_).
 - For dev versions we use sequential numbering approach, handled by **Build and Deploy Server (dev)** workflow (g.e., _dev.255_).
 ## Deployment Process
-1. **Push Release Branch**:
+### 1. **Push Release Branch**:
   - **Regular Release**:
     - After gathering all needed changes on the _dev_ branch, create the release branch (e.g., _release/1.16_ from _dev_).
     - Push the branch to the remote repository. This will trigger the **Build Server Release** workflow.
