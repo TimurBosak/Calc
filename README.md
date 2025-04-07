@@ -1,4 +1,4 @@
-### Backend Release Flow
+# Backend Release Flow
 ## Versioning
 - For releases we use **SemVer** approach: **MAJOR.MINOR.PATCH** (e.g., _1.15.4_).
 - For dev versions we use sequential numbering approach, handled by **Build and Deploy Server (dev)** workflow (g.e., _dev.255_).
