@@ -14,7 +14,4 @@
     - After the pull request get's approved, merge your branch. This will trigger the **Build Server Release** workflow.
 ### Start Deployment Workflow: 
   - Once the build is finished, start the **Deploy Server Stack (prod)** workflow.
-  - Provide the version tags from the previous steps (e.g., _1.16_ for a regular release or _1.15.1_ for a patch release) and clicking **Run Workflow**.
-### Verify Deployment: 
-  - After the build is complete, verify that the new version of the production stack is applied by visiting **CloudFormation->Stack->{name of stack}->Parameters**
-  - Check that the value for tags is updated to reflect the new version.
+  - Provide the fully qualified version tags from the previous steps (e.g., _1.16.0_ for a regular release or _1.15.1_ for a patch release) and clicking **Run Workflow**.
